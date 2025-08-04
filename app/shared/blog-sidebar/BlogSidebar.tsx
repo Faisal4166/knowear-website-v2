@@ -29,7 +29,7 @@ const BlogSidebar = (props: Props) => {
       <div className='max-md:hidden'>
         <div className='w-full h-px bg-[#E5E7EB] mt-[26px]' />
         <div className='mt-[45px]'>
-          <Image src="https://knowearcommerce.s3.ap-south-1.amazonaws.com/blogsidebanner-1740650123315.jpg" alt='blog banner' width={260} height={1032} className='w-full h-ull' />
+          {/* <Image src="https://knowearcommerce.s3.ap-south-1.amazonaws.com/blogsidebanner-1740650123315.jpg" alt='blog banner' width={260} height={1032} className='w-full h-ull' /> */}
         </div>
       </div>
     </div>

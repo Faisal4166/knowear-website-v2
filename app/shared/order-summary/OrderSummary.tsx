@@ -167,6 +167,12 @@ const OrderSummary = ({ cartDetails, isLoaded = true }: Props) => {
                 {cartDetails?.summary?.wholeTotal?.text}
               </p>
             </div>
+            <div className="flex items-center justify-between font-semibold text-lg">
+              <p className="max-md:pt-1.5 text-xs md:text-sm font-normal">
+                Add the line "Shipping calculated at checkout" to the cart,
+                beneath the order total, to clarify shipping charge visibility
+              </p>
+            </div>
           </div>
         </div>
       ) : (
