@@ -57,11 +57,11 @@ export default function CheckoutSupportBanner() {
   }, [inView, isLastPage, isLoading, type]);
 
   return (
-    <div>
+    <div className="border-t-2">
       {widgetsList.map((item, index) => {
         switch (item?.type) {
           case "video-banner":
-            return <VideoBanner widgetDetails={item} key={index} />;
+            return <VideoBanner checkoutBanner={true} widgetDetails={item} key={index} />;
           default:
             return null;
         }

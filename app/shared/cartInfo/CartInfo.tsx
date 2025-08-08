@@ -72,21 +72,13 @@
 // }
 import { CartDetails } from "@/types/providers";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import ApplyCoupon from "../cartList/ApplyCoupon";
-import Cookies from "js-cookie";
-import api from "@/config/api.interceptor";
-import { endpoints } from "@/app/_constants/endpoints/endpoints";
-import { toast } from "@/hooks/use-toast";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import BuyNowSheet from "../buynow-sheet/buynow-sheet";
-import { Button } from "@/components/ui/button";
 
 type Props = {
   cartDetails: CartDetails;
   availableCoupons: any[];
   getCartDetails: () => void;
-  props?: any;
   // hasGiftWrap: boolean;
   // deliveryInstructions: string;
 };
@@ -95,56 +87,9 @@ export default function CartInfo({
   cartDetails,
   availableCoupons,
   getCartDetails,
-  props,
 }: // hasGiftWrap,
 // deliveryInstructions,
 Props) {
-  const token = Cookies.get("access_token");
-  const [quantity, setQuantity] = React.useState("1");
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  console.log("cartDetails---------------", cartDetails);
-
-  const handleBuyNow = async () => {
-    try {
-      const response = await api.post(endpoints.BuyNow, {
-        product: props?.productDetails?.params?.slug,
-        quantity: quantity,
-        buynow: true, // Ensures it's a buy now action
-      });
-
-      if (response.data.errorCode === 0) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("buynow", "true");
-        await getCartDetails();
-        await router.replace(`/checkout?${params.toString()}`, {
-          scroll: false,
-        });
-      } else {
-        toast({ description: response.data.message, variant: "destructive" });
-        await getCartDetails();
-      }
-    } catch (error) {
-      console.error("Error in buy now:", error);
-      toast({ title: "Error processing buy now", variant: "destructive" });
-    }
-  };
-
-  useEffect(() => {
-    if (props?.productDetails) {
-      if (cartDetails.products && cartDetails.products.length > 0) {
-        const productItem = cartDetails.products.find(
-          (cartItem: any) =>
-            cartItem.params.slug === props?.productDetails.params.slug
-        );
-        productItem
-          ? setQuantity(String(productItem?.quantity))
-          : setQuantity("1");
-      }
-    }
-  }, [cartDetails]);
-
   return (
     <div className="w-full h-auto lg:px-[90px] lg:pb-[70px] lg:pt-8">
       {/* <ApplyNote /> */}
@@ -202,33 +147,13 @@ Props) {
             <div>{cartDetails.summary.wholeTotal.text}</div>
           )}
         </div>
+        <div className="flex items-center justify-between font-semibold text-lg">
+          <p className="max-md:pt-1.5 text-xs md:text-sm font-normal">
+            Shipping calculated at checkout
+          </p>
+        </div>
       </div>
       <div className="max-md:mb-[29px]">
-        {/* {token ? (
-          <button
-            onClick={handleBuyNow}
-            className="block bg-black hover:bg-black font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all"
-          >
-            Check Out{" "}
-          </button>
-        ) : (
-          <BuyNowSheet
-            triggerButton={
-              <Button className="w-full md:mt-12 mt-10 bg-[var(--primary)] rounded-[0] text-white text-center py-7 text-[15px] md:text-lg font-medium max-md:uppercase">
-                Check Out{" "}
-              </Button>
-            }
-            productDetails={props?.productDetails}
-            quantity={Number(quantity)}
-            getCartDetails={() => {
-              return getCartDetails()
-                .then(() => {})
-                .catch(() => {});
-            }}
-            isAuthenticated={false}
-          />
-        )} */}
-
         <Link href="/checkout">
           <div className="w-full md:mt-12 mt-10 bg-[var(--primary)] text-white text-center py-4 text-[15px] md:text-lg font-medium max-md:uppercase">
             Check Out

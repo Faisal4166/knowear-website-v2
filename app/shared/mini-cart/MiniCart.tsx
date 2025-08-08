@@ -21,7 +21,6 @@ import SheetPopup from "../sheet-popup/SheetPopup";
 import AppLoader from "../app-loader/AppLoader";
 import Cookies from "js-cookie";
 import AddToCartSheet from "../add-to-cart-sheet/AddToCartSheet";
-import { trackAddToCart } from "@/config/fpixel";
 
 interface ProductDetails {
   params: {

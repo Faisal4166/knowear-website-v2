@@ -23,6 +23,7 @@ import BuyNowSheet from "../buynow-sheet/buynow-sheet";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import { trackProductView } from "@/config/fpixel";
+import Image from "next/image";
 
 type Props = {
   productDetails: Product;
@@ -49,22 +50,24 @@ const ProductDetails = (props: Props) => {
       router.push("/404"); // Redirect to 404 page if product details are not available
     }
   }, []);
-// Track product view when component mounts
-useEffect(() => {
-  // console.log(props.productDetails, "product details");
-  if (props.productDetails) { 
-    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-      trackProductView({
-        content_ids: [props.productDetails.params.slug],
-        content_name: props.productDetails.name.text,
-        content_type: 'product',
-        // content_category: props.productDetails.category?.text,
-        value: parseFloat(props.productDetails.price.text.replace(/[^0-9.-]+/g,"")),
-        currency: 'AED' // Adjust currency as needed
-      })
+  // Track product view when component mounts
+  useEffect(() => {
+    // console.log(props.productDetails, "product details");
+    if (props.productDetails) {
+      if (typeof window !== "undefined" && typeof window.fbq === "function") {
+        trackProductView({
+          content_ids: [props.productDetails.params.slug],
+          content_name: props.productDetails.name.text,
+          content_type: "product",
+          // content_category: props.productDetails.category?.text,
+          value: parseFloat(
+            props.productDetails.price.text.replace(/[^0-9.-]+/g, "")
+          ),
+          currency: "AED", // Adjust currency as needed
+        });
+      }
     }
-  }
-}, [pathname, props.productDetails]);
+  }, [pathname, props.productDetails]);
   useEffect(() => {
     if (props.productDetails) {
       if (cartDetails.products && cartDetails.products.length > 0) {
@@ -213,7 +216,8 @@ useEffect(() => {
                   <div className="grid grid-cols-4 gap-3">
                     <div className="col-span-3 md:col-span-4">
                       <div className="bg-[#D4D4D4] w-max font-normal text-xs text-center text-black px-[9px] py-[3px] h-6">
-                        {props.productDetails.donationPercentage.text}
+                        {/* {props.productDetails.donationPercentage.text} */}
+                        5% of Every Purchase is Donated to Education
                       </div>
                     </div>
                     <div className="col-span-1 md:hidden">
@@ -304,29 +308,30 @@ useEffect(() => {
                         </Link>
                       </div>
                     )}
-                    {token?  <button
-                      onClick={handleBuyNow}
-                      className="block bg-black hover:bg-black font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all"
-                    >
-                      Buy Now
-                    </button>:  <BuyNowSheet
-                      triggerButton={
-                        <Button className="block bg-black  rounded-none hover:bg-black border-radius-none font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all">
-                          Buy Now
-                        </Button>
-                      }
-                      productDetails={props.productDetails}
-                      quantity={Number(quantity)}
-                      getCartDetails={() => {
-                        return getCartDetails()
-                          .then(() => {})
-                          .catch(() => {});
-                      }}
-                      isAuthenticated={false}
-                    />}
-                  
-
-                  
+                    {token ? (
+                      <button
+                        onClick={handleBuyNow}
+                        className="block bg-black hover:bg-black font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all"
+                      >
+                        Buy Now
+                      </button>
+                    ) : (
+                      <BuyNowSheet
+                        triggerButton={
+                          <Button className="block bg-black  rounded-none hover:bg-black border-radius-none font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all">
+                            Buy Now
+                          </Button>
+                        }
+                        productDetails={props.productDetails}
+                        quantity={Number(quantity)}
+                        getCartDetails={() => {
+                          return getCartDetails()
+                            .then(() => {})
+                            .catch(() => {});
+                        }}
+                        isAuthenticated={false}
+                      />
+                    )}
 
                     <div className="hidden md:block flex-none">
                       <WishlistButton
@@ -348,37 +353,21 @@ useEffect(() => {
                 </div>
               </div>
             </div>
-            <div className="mt-[50px]">
-              <div className="relative pb-[100px] max-md:container max-md:max-w-full">
-                {
-                  // props.relatedProducts.likedProducts && props.relatedProducts.likedProducts.length > 0 && (
-                  //   <div>
-                  //     <div className="flex justify-between items-center ">
-                  //       <div className="text-lg lg:text-[35px] font-bold  md:mb-[31px] leading-[50.58px]">You May Also Like</div>
-                  //       <Link href={"/products"} className="underline">
-                  //        View All
-                  //       </Link>
-                  //     </div>
-                  //     <Carousel products={props.relatedProducts.likedProducts} />
-                  //   </div>
-                  // )
-                }
-
-                {props?.relatedProducts?.relatedProducts &&
-                  props.relatedProducts.relatedProducts.length > 0 && (
-                    <div className="mt-6 lg:mt-12">
-                      <div className="text-2xl lg:text-4xl font-semibold mb-6">
-                        You May Also Like
-                      </div>
-                      <Carousel
-                        products={props.relatedProducts.relatedProducts}
-                      />
+            <div className="relative pb-[30px] max-md:container max-md:max-w-full">
+              {props?.relatedProducts?.relatedProducts &&
+                props.relatedProducts.relatedProducts.length > 0 && (
+                  <div className="mt-6 lg:mt-12">
+                    <div className="text-2xl lg:text-4xl font-semibold mb-6">
+                      You May Also Like
                     </div>
-                  )}
-              </div>
+                    <Carousel
+                      products={props.relatedProducts.relatedProducts}
+                    />
+                  </div>
+                )}
             </div>
           </div>
-          <div className="flex justify-start items-center gap-5 bg-white md:bg-transparent px-4 md:px-0 py-3 md:py-0 fixed md:relative left-0 md:left-[unset] right-0 md:right-[unset] bottom-[60px] md:bottom-[unset] z-50 md:z-[unset] md:pb-5 lg:pb-[30px] md:hidden">
+          <div className="flex justify-start items-center gap-5 bg-white md:bg-transparent px-4 md:px-0  md:py-0 fixed md:relative left-0 md:left-[unset] right-0 md:right-[unset] bottom-[60px] md:bottom-[unset] z-50 md:z-[unset] md:pb-5 lg:pb-[30px] md:hidden">
             <div className="w-[66px]">
               <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
             </div>
@@ -409,27 +398,30 @@ useEffect(() => {
             >
               Buy Now
             </button> */}
-            {token?  <button
-                      onClick={handleBuyNow}
-                      className="block bg-black hover:bg-black font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all"
-                    >
-                      Buy Now
-                    </button>:  <BuyNowSheet
-                      triggerButton={
-                        <Button className="block bg-black  rounded-none hover:bg-black border-radius-none font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all">
-                          Buy Now
-                        </Button>
-                      }
-                      productDetails={props.productDetails}
-                      quantity={Number(quantity)}
-                      getCartDetails={() => {
-                        return getCartDetails()
-                          .then(() => {})
-                          .catch(() => {});
-                      }}
-                      isAuthenticated={false}
-                    />}
-                  
+            {token ? (
+              <button
+                onClick={handleBuyNow}
+                className="block bg-black hover:bg-black font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all"
+              >
+                Buy Now
+              </button>
+            ) : (
+              <BuyNowSheet
+                triggerButton={
+                  <Button className="block bg-black  rounded-none hover:bg-black border-radius-none font-medium text-base text-white h-[50px] py-[14px] w-full text-center transition-all">
+                    Buy Now
+                  </Button>
+                }
+                productDetails={props.productDetails}
+                quantity={Number(quantity)}
+                getCartDetails={() => {
+                  return getCartDetails()
+                    .then(() => {})
+                    .catch(() => {});
+                }}
+                isAuthenticated={false}
+              />
+            )}
 
             <div className="hidden md:block flex-none">
               <WishlistButton
@@ -438,6 +430,76 @@ useEffect(() => {
                 isPdp={true}
               />
             </div>
+          </div>
+          <div className=" md:container flex flex-col md:flex-row items-center gap-4">
+            <div className="w-11/12 md:h-647 md:w-6/10 ">
+              <Image
+                src="/checkout_banner.jpg"
+                alt="Team Work"
+                width={1079}
+                height={617}
+                className="object-cover hidden lg:block w-full h-full"
+              />
+              <Image
+                src="/checkout_banner_mobile.jpg"
+                alt="Team Work"
+                width={360}
+                height={369}
+                className="object-cover  block md:hidden w-full h-full"
+              />
+            </div>
+
+            <div className="flex flex-col justify-center md:w-4/10 w-11/12  md:ml-8 ">
+              <h2 className="text-[16px] md:text-[29px] font-semibold truncate">
+                Emirati Initiative to Support Education
+              </h2>
+
+              <p className="text-[15px] md:text-[19px] font-normal mt-1 text-justify">
+                For underprivileged students, supported by Najm Suhail
+                Investment in collaboration with American University of Sharjah
+                (AUS) and Her Excellency Sheikha Bodour bint Sultan Al Qasimi,
+                President of AUS. At KnoWear, 5% of every purchase is donated to
+                supporting underprivileged students worldwide.
+              </p>
+
+              <h2 className="text-[16px] md:text-[22px] font-semibold mt-6">
+                Shop with impact. Empower the next Generation.
+              </h2>
+              <button className="bg-black text-white w-full md:w-[221px] h-[51] px-6 py-3 mt-4 text-sm font-semibold hover:bg-gray-800 transition">
+                OUR IMPACT
+              </button>
+            </div>
+          </div>
+          <div className="flex mt-10 justify-center w-full">
+            {/* Desktop video */}
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              webkit-playsinline="true"
+              src="/EveryPurchaseMattersDesktop.mp4"
+              className="hidden md:block w-[1920px] h-[718px] object-cover"
+            ></video>
+
+            {/* Mobile video */}
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              webkit-playsinline="true"
+              src="/EveryPurchaseMattersMobile.mp4"
+              className="block md:hidden w-[414px] h-[233px] object-cover"
+            ></video>
+
+            {/* <Image
+              src="/wallpaper.png"
+              alt="Test GIF"
+              width={1920}
+              height={718}
+              className="w-[1920] h-[718] md:w-[414] md:h-[233] object-cover"
+            /> */}
           </div>
         </section>
       )}

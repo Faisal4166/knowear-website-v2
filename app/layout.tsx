@@ -14,6 +14,7 @@ import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { endpoints } from "./_constants/endpoints/endpoints";
 import Script from "next/script";
 import NewFooter from "./shared/footer/NewFooter";
+import SnapchatPixel from "@/components/layout/SnapchatPixel";
 
 const jost = Jost({
   subsets: ["latin"],
@@ -176,6 +177,7 @@ export default function RootLayout({
           </StateProvider>
         </ThemeProvider>
         <FacebookPixel pixelId={"1117831269406176"} />
+        <SnapchatPixel pixelId={"a5dde0a6-5c80-4b58-9f37-3de8810c4a2b"} />
         {/* Microsoft Clarity Tracking Script */}
         <Script id="clarity-script" strategy="afterInteractive">
           {`

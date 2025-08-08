@@ -14,7 +14,7 @@ const HeroBanner = ({ widgetDetails }: any) => {
     <>
       {/* h-[341px] lg:h-[calc(100vh_-_115px)] */}
       <section className="relative w-full overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-black/50 before:z-10">
-        {widgetDetails?.video ? (
+        {/* {widgetDetails?.video ? (
           <video
             autoPlay
             muted
@@ -41,8 +41,16 @@ const HeroBanner = ({ widgetDetails }: any) => {
             alt="Knowear"
             className="absolute top-0 left-0 w-full h-full object-cover"
           />
-        )}
-
+        )} */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          webkit-playsinline
+          src={'/hero_video.mp4'}
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        ></video>
         <div className="container max-w-full relative z-20 md:w-[1366px] md:h-[655px] w-[375px] h-[370px] text-white flex flex-col justify-center items-center ">
           <h1 className="text-[25px] lg:text-[45px] leading-[30px] lg:leading-[50px] max-w-[576px] w-full font-bold mb-[10px] lg:mb-[22px] justify-center align-center text-center  mx-auto">
             {/* {widgetDetails.title} */} 35% OFF <p>SUMMER SALE</p>

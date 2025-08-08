@@ -29,6 +29,7 @@ import Home from "@/app/page";
 import CheckoutSupportBanner from "@/components/orders/CheckoutSupportBanner";
 import Image from "next/image";
 import SecureLock from "@/public/svgs/SecureLock";
+import { trackSnapCheckoutStart } from "@/config/snapPixel";
 
 type Props = {
   searchParams: any;
@@ -376,10 +377,7 @@ const Checkout = (props: Props) => {
   };
 
   const onHandlePlaceOrder = () => {
-    console.log("----------------------------");
-    console.log(checkoutFormData);
-    console.log("----------------------------");
-
+    trackSnapCheckoutStart(checkoutFormData);
     if (
       checkoutFormData?.paymentType === "cod" &&
       !checkoutFormData?.isVerified

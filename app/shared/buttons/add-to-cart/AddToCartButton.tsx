@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { trackAddToCart } from "@/config/fpixel";
+import { trackSnapAddToCart } from "@/config/snapPixel";
 
 // Define a more specific type for cartDetails
 type CartItem = {
@@ -28,6 +29,7 @@ const AddToCartButton = (props: Props) => {
       quantity: cartDetails.quantity
     });
     trackAddToCart(cartDetails);
+    trackSnapAddToCart(cartDetails);
   };
 
   return (
