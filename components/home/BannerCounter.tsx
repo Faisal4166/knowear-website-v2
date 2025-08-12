@@ -13,7 +13,7 @@ const BannerCounter = ({ widgetDetails }: Props) => {
   return (
     <>
       <section className="relative mt-5 md:mt-10 py-[88px] lg:py-[106px] overflow-hidden before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-black/50 before:z-10">
-       {
+        {/* {
                  widgetDetails?.video ?
                    <video autoPlay muted loop playsInline webkit-playsinline src={widgetDetails?.video} className="absolute top-0 left-0 w-full h-full object-cover"></video>
                   
@@ -24,7 +24,17 @@ const BannerCounter = ({ widgetDetails }: Props) => {
                      src={widgetDetails?.videoCover}
                      alt='Knowear'
                      className="absolute top-0 left-0 w-full h-full object-cover" />
-               }
+               } */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          webkit-playsinline
+          src={"/AUS.mp4"}
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        ></video>
+
         <div className="container max-w-full relative z-10 text-white ">
           <h3 className="text-[30px] leading-[30px] lg:leading-[50px] lg:text-[45px] font-semibold max-w-[454px] w-full">
             {widgetDetails?.title}
@@ -50,10 +60,10 @@ const BannerCounter = ({ widgetDetails }: Props) => {
                   <Image src={Fund} alt="Fund" />
                   <div>
                     <h4 className="text-[25px] lg:text-[36px] leading-9 font-medium">
-                     5%
+                      5%
                     </h4>
                     <p className="text-xs lg:text-sm font-medium uppercase">
-                    of revenue supports education
+                      of revenue supports education
                     </p>
                   </div>
                 </li>

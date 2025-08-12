@@ -29,7 +29,7 @@ const VideoBanner = ({ checkoutBanner = false, widgetDetails }: Props) => {
             <h3 className=" lg:text-[30px] lg:text-[65px] h-[88px] font-semibold md:mt-0 mt-2">
               KnoWear Supports Education Internationally
             </h3>
-            <p className="text-sm lg:text-xl font-medium uppercase md:leading-[20px] lg:mt-[10px] -mt-12">
+            <p className="text-xs lg:text-xl font-medium uppercase md:leading-[20px] lg:mt-[10px] -mt-12">
               "We proudly supported the “Get Active for Education” initiative at
               the American University of Sharjah (AUS)"
             </p>
@@ -41,7 +41,9 @@ const VideoBanner = ({ checkoutBanner = false, widgetDetails }: Props) => {
         <div className="relative w-full pt-[56.25%]">
           <Image
             src={
-              checkoutBanner ? "/checkout_banners.jpg" : "/homepage_banner.jpg"
+              checkoutBanner
+                ? "/homepage_banner_desktop.jpg"
+                : "/homepage_banner.jpg"
             }
             alt="Video Banner"
             fill
@@ -52,14 +54,16 @@ const VideoBanner = ({ checkoutBanner = false, widgetDetails }: Props) => {
 
           {/* Video Button - Moved left from center */}
           <div className="absolute top-1/2 left-[10%] -translate-y-1/2 z-10">
-            {!checkoutBanner && <div className="mb-12">
-              <h3 className="text-[30px] lg:text-[65px] h-[88px] font-semibold md:mt-0 text-white">
-                {widgetDetails?.title}
-              </h3>
-              <p className="text-sm lg:text-xl font-medium uppercase md:leading-[20px] lg:mt-[10px] -mt-12 text-white">
-                {widgetDetails?.description}
-              </p>
-            </div>}
+            {!checkoutBanner && (
+              <div className="mb-12">
+                <h3 className="text-[30px] lg:text-[65px] h-[88px] font-semibold md:mt-0 text-white">
+                  {widgetDetails?.title}
+                </h3>
+                <p className="text-sm lg:text-xl font-medium uppercase md:leading-[20px] lg:mt-[10px] -mt-12 text-white">
+                  {widgetDetails?.description}
+                </p>
+              </div>
+            )}
             <Dialog>
               <DialogTrigger className="md:mb-12 flex items-center gap-2 md:text-[18px] text-[15px] font-normal text-black bg-white md:px-[21px] md:py-[18px] px-[18px] py-[15px] uppercase hover:rounded-lg transition-all">
                 <Image
@@ -94,7 +98,11 @@ const VideoBanner = ({ checkoutBanner = false, widgetDetails }: Props) => {
                         loop
                         playsInline
                         webkit-playsinline
-                        src={"/KW_How_it_works.mp4"}
+                        src={
+                          checkoutBanner
+                            ? "/KW_How_it_works.mp4"
+                            : "/How_it_works.mp4"
+                        }
                         className="w-full"
                       ></video>
                     )}

@@ -1,21 +1,20 @@
-'use client'
+"use client";
 
-import { usePathname } from 'next/navigation'
-import Script from 'next/script'
-import { useEffect, useRef } from 'react'
-import * as fbq from '@/config/fpixel'
+import { usePathname } from "next/navigation";
+import Script from "next/script";
+import { useEffect, useRef } from "react";
+import * as fbq from "@/config/fpixel";
 
-const FacebookPixel = ({ pixelId }: any) => {
-  const pathname = usePathname()
+const FacebookPixel = ({ pixelId }: { pixelId: string }) => {
+  const pathname = usePathname();
   const initialized = useRef(false);
+  const FB_PIXEL_ID = pixelId;
 
   useEffect(() => {
-    if (initialized.current) {
+    if (initialized.current && typeof window.fbq === "function") {
       fbq.pageview();
     }
   }, [pathname]);
-
-  const FB_PIXEL_ID = pixelId
 
   return (
     <>
@@ -33,6 +32,7 @@ const FacebookPixel = ({ pixelId }: any) => {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '${FB_PIXEL_ID}');
+            fbq('track', 'PageView');
           `,
         }}
         onLoad={() => {
@@ -40,17 +40,16 @@ const FacebookPixel = ({ pixelId }: any) => {
         }}
       />
       <noscript>
-        {/* eslint-disable */}
         <img
           height="1"
           width="1"
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
           src={`https://www.facebook.com/tr?id=${FB_PIXEL_ID}&ev=PageView&noscript=1`}
           alt=""
         />
       </noscript>
     </>
-  )
-}
+  );
+};
 
-export default FacebookPixel
+export default FacebookPixel;

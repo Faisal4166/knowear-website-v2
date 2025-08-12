@@ -65,6 +65,7 @@ const Checkout = (props: Props) => {
   const defaultAddress = address?.find((item: any) => item?.isDefaultShipping);
   const [deliveryInstructions, setDeliveryInstructions] = useState("");
   const [isUpdatingDeliveryNote, setIsUpdatingDeliveryNote] = useState(false);
+  const [checkoutTracked, setCheckoutTracked] = useState(false);
 
   useEffect(() => {
     getGiftWrapAmount();
@@ -91,13 +92,12 @@ const Checkout = (props: Props) => {
   }, [user?.email, guestDetails?.email]);
 
   useEffect(() => {
-    // console.log(cartDetails,"cartDetails123");
-
-    if (typeof window !== "undefined" && typeof window.fbq === "function") {
-      // Optiow ultimat enal debug log
-      trackCheckout(cartDetails); // Pass cartDetails directly (or adjust as needed)
+    if (!checkoutTracked) {
+      setCheckoutTracked(true);
+      trackCheckout(cartDetails);
     }
-  }, [pathname, cartDetails]);
+  }, [checkoutTracked]);
+
   useEffect(() => {
     if (guestToken) {
       getGuestUser();

@@ -52,7 +52,6 @@ const ProductDetails = (props: Props) => {
   }, []);
   // Track product view when component mounts
   useEffect(() => {
-    // console.log(props.productDetails, "product details");
     if (props.productDetails) {
       if (typeof window !== "undefined" && typeof window.fbq === "function") {
         trackProductView({
@@ -465,7 +464,12 @@ const ProductDetails = (props: Props) => {
               <h2 className="text-[16px] md:text-[22px] font-semibold mt-6">
                 Shop with impact. Empower the next Generation.
               </h2>
-              <button className="bg-black text-white w-full md:w-[221px] h-[51] px-6 py-3 mt-4 text-sm font-semibold hover:bg-gray-800 transition">
+              <button
+                onClick={() =>
+                  (window.location.href = `/blogs/knowear-proudly-sponsors-"get-active-for-education"-event-at-aus-and-receives-prestigious-award-for-commitment-to-education`)
+                }
+                className="bg-black text-white w-full md:w-[221px] h-[51px] px-6 py-3 mt-4 text-sm font-semibold hover:bg-gray-800 transition"
+              >
                 OUR IMPACT
               </button>
             </div>

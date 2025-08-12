@@ -22,13 +22,19 @@ const AddToCartButton = (props: Props) => {
 
   const handleAddToCart = () => {
     // Now you can safely access properties of cartDetails
-    console.log('Adding to cart:', {
+    console.log("Adding to cart:", {
       id: cartDetails.id,
       name: cartDetails.name,
       price: cartDetails.price,
-      quantity: cartDetails.quantity
+      quantity: cartDetails.quantity,
     });
-    trackAddToCart(cartDetails);
+    trackAddToCart({
+      content_ids: cartDetails.id,
+      content_name: cartDetails.name,
+      content_type: "product",
+      value: cartDetails.price,
+      currency: "AED",
+    });
     trackSnapAddToCart(cartDetails);
   };
 

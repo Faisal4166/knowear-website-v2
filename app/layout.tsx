@@ -177,6 +177,7 @@ export default function RootLayout({
           </StateProvider>
         </ThemeProvider>
         <FacebookPixel pixelId={"1117831269406176"} />
+        {/* <FacebookPixel pixelId={"747766534636930"} /> */}
         <SnapchatPixel pixelId={"a5dde0a6-5c80-4b58-9f37-3de8810c4a2b"} />
         {/* Microsoft Clarity Tracking Script */}
         <Script id="clarity-script" strategy="afterInteractive">
