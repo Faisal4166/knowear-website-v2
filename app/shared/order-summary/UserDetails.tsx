@@ -25,7 +25,7 @@ type UserDetailsProps = {
     email: string;
   };
   setCheckoutFormData: (data: any) => void;
-  cartDetails: any; 
+  cartDetails: any;
 };
 
 const UserDetails = ({
@@ -41,16 +41,16 @@ const UserDetails = ({
       otp: "",
     },
   });
-  
+
   console.log(cartDetails, "the cart details");
 
   // Reset to initial state when component mounts
   useEffect(() => {
     // Always start with the Send OTP form
     setOtpSent(false);
-    form.reset({ 
-      email: checkoutFormData?.email || "", 
-      otp: "" 
+    form.reset({
+      email: checkoutFormData?.email || "",
+      otp: "",
     });
     console.log(checkoutFormData, "checkoutFormData");
   }, [checkoutFormData, form]); // Added proper dependencies
@@ -73,33 +73,37 @@ const UserDetails = ({
 
     try {
       // Validate email
-      await api.post(endpoints.validateEmail, { email: data.email });
-      
+      await api.post(endpoints.validateEmail, {
+        email: data.email,
+      });
+
       // Store email in checkout form data
       setCheckoutFormData({
         ...checkoutFormData,
         email: data.email,
       });
-      
+
       // Send OTP to email
-      await api.post(endpoints.verifyEmailaddress, { email: data.email });
-      
-      toast({ 
-        title: "OTP sent", 
-        description: "Please check your email for the verification code" 
+      await api.post(endpoints.verifyEmailaddress, {
+        email: data.email,
       });
-      
+
+      toast({
+        title: "OTP sent",
+        description: "Please check your email for the verification code",
+      });
+
       // Update the form instead of resetting it to keep the email value
       form.setValue("email", "");
       form.setValue("otp", "");
-      
+
       setOtpSent(true);
     } catch (err: any) {
       console.error("Error:", err);
-      toast({ 
-        title: "Failed to send OTP", 
+      toast({
+        title: "Failed to send OTP",
         description: err.response?.data?.message || "Please try again",
-        variant: "destructive" 
+        variant: "destructive",
       });
     }
   };
@@ -119,32 +123,36 @@ const UserDetails = ({
 
       if (response.data.errorCode === 0) {
         // Set token in cookies
-        Cookies.set("guest_access_token", response?.data?.result?.output?.token, {
-          expires: 7,
-          secure: true,
-          sameSite: "strict",
-        });
-        
-        toast({ 
-          title: "Email verified successfully"
+        Cookies.set(
+          "guest_access_token",
+          response?.data?.result?.output?.token,
+          {
+            expires: 7,
+            secure: true,
+            sameSite: "strict",
+          }
+        );
+
+        toast({
+          title: "Email verified successfully",
         });
         setOtpSent(false);
-        
+
         // Clear the OTP field after successful verification
         form.setValue("otp", "");
         setCheckoutFormData({
           ...checkoutFormData,
           cart: cartDetails?.cart,
 
-          isVerified: true
+          isVerified: true,
         });
-        
       }
     } catch (error: any) {
       console.error("OTP verification error:", error);
       toast({
         title: "OTP verification failed",
-        description: error.response?.data?.message || "Please try again with correct OTP",
+        description:
+          error.response?.data?.message || "Please try again with correct OTP",
         variant: "destructive",
       });
     }
@@ -209,7 +217,7 @@ const UserDetails = ({
                   </FormItem>
                 )}
               />
-              <Button 
+              <Button
                 type="submit"
                 className="bg-white border border-gray-300 h-[45px] md:h-[50px] rounded-none text-black font-medium text-[15px] block px-4"
               >

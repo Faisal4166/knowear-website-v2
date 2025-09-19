@@ -16,21 +16,19 @@ type PaymentMethodsProps = {
     cvv: string;
   };
   setCheckoutFormData: (data: any) => void;
-  cartDetails: any; 
+  cartDetails: any;
   guestToken?: string;
-  
 };
 
 const PaymentMethods = ({
   checkoutFormData,
   setCheckoutFormData,
-  cartDetails, 
+  cartDetails,
   guestToken,
- 
 }: PaymentMethodsProps) => {
   const [showUserDetails, setShowUserDetails] = useState(false);
-  
-// console.log(cartDetails,"cartDetails123");
+
+  // console.log(cartDetails,"cartDetails123");
   // useEffect(() => {
   //   // Show UserDetails if COD is selected
   //   if (checkoutFormData?.paymentType === "cod") {
@@ -44,19 +42,19 @@ const PaymentMethods = ({
       case "cod":
         setShowUserDetails(true);
         trackPaymentInfo({
-          payment_method: 'cash_on_delivery',
+          payment_method: "cash_on_delivery",
           cart_total: cartDetails?.total || 0,
           cart_items_count: cartDetails?.items?.length || 0,
-          payment_type: 'cod'
+          payment_type: "cod",
         });
         break;
       case "card":
         setShowUserDetails(false);
         trackPaymentInfo({
-          payment_method: 'credit_debit_card',
+          payment_method: "credit_debit_card",
           cart_total: cartDetails?.total || 0,
           cart_items_count: cartDetails?.items?.length || 0,
-          payment_type: 'card'
+          payment_type: "card",
         });
         break;
       default:
@@ -93,6 +91,7 @@ const PaymentMethods = ({
             </p>
           </div>
         </div>
+
         {/* {checkoutFormData?.paymentType === "card" && (
           <div className="grid grid-cols-2 gap-x-10 gap-y-5 mb-5 pt-[15px] md:pt-[29px]">
             <div>
@@ -156,7 +155,7 @@ const PaymentMethods = ({
           </div>
         )} */}
         <div className="flex gap-x-[9px] items-start">
-          {/* <RadioGroupItem className="mt-1" value="cod" />
+          <RadioGroupItem className="mt-1" value="cod" />
           <div className="w-full">
             <Label
               htmlFor="option-two"
@@ -166,18 +165,18 @@ const PaymentMethods = ({
             </Label>
             <p className="font-medium text-xs md:text-base mb-4">
               Pay with cash upon delivery.
-            </p> */}
-            
+            </p>
+
             {/* Show UserDetails component when COD is selected */}
             {showUserDetails && guestToken && (
-  <UserDetails
-    cartDetails={cartDetails}
-    checkoutFormData={checkoutFormData}
-    setCheckoutFormData={setCheckoutFormData}
-  />
-)}
-          {/* {/* </div> */}
-        </div> 
+              <UserDetails
+                cartDetails={cartDetails}
+                checkoutFormData={checkoutFormData}
+                setCheckoutFormData={setCheckoutFormData}
+              />
+            )}
+          </div>
+        </div>
       </RadioGroup>
     </div>
   );

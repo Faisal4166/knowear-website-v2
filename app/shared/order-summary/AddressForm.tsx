@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
   useCallback,
+  useContext,
 } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -45,6 +46,9 @@ import _ from "lodash";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import AddressConfirmationModal from "@/components/orders/ConfirmCheckout";
+import { usePathname, useRouter } from "next/navigation";
+import { StateContext } from "@/providers/state/StateContext";
+import { trackPurchased } from "@/config/fpixel";
 
 // Zod schema for form validation
 const baseSchema = z.object({
@@ -118,7 +122,6 @@ interface AddressFormProps {
   setCheckoutFormData?: React.Dispatch<React.SetStateAction<any>>;
   email?: string;
   checkoutFormData?: any;
-  onPlaceOrder?: (data: any) => void;
 }
 
 export interface AddressFormHandle {
@@ -129,18 +132,22 @@ export interface AddressFormHandle {
 const AddressForm = forwardRef<AddressFormHandle, AddressFormProps>(
   (
     {
-      user,
-      address,
+      // user,
+      // address,
       guestDetails,
       getCartDetails,
-      getAddress,
+      // getAddress,
       setCheckoutFormData,
       email,
-      onPlaceOrder,
       checkoutFormData,
     },
     ref
   ) => {
+    const router = useRouter();
+    const { user, getUser, address, getAddress } = useContext(StateContext);
+    const defaultAddress = address?.find(
+      (item: any) => item?.isDefaultShipping
+    );
     const mapRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [mapLoaded, setMapLoaded] = useState(false);
@@ -328,7 +335,6 @@ const AddressForm = forwardRef<AddressFormHandle, AddressFormProps>(
 
         // Update form values
         const selectedCountry = countryOptions.find((c) => c.value === country);
-        // console.log(selectedCountry?.code,"selected country")
         if (selectedCountry) {
           form.setValue("countryCode", selectedCountry.code);
           form.trigger("countryCode");
@@ -344,7 +350,6 @@ const AddressForm = forwardRef<AddressFormHandle, AddressFormProps>(
         // form.setValue("areanumber", areanumber);
         form.setValue("deliveryAddress", deliveryAddress);
 
-        console.log(selectedCountry, "selected country");
         form.setValue("aptSuiteUnit", aptSuiteUnit);
 
         // Trigger validation
@@ -932,103 +937,255 @@ const AddressForm = forwardRef<AddressFormHandle, AddressFormProps>(
     const handleConfirmedSubmit = async (data: AddressFormValues) => {
       if (!data) return;
 
+      console.log(
+        "---------------paymentType------------------",
+        checkoutFormData?.paymentType
+      );
+      console.log(
+        "--------------isVerified-------------------",
+        checkoutFormData?.isVerified
+      );
+      console.log(
+        "--------------isVerified && COD-------------------",
+        checkoutFormData?.paymentType === "cod" && !checkoutFormData?.isVerified
+      );
+
+      if (
+        checkoutFormData?.paymentType === "cod" &&
+        !checkoutFormData?.isVerified
+      ) {
+        toast({
+          title: "Please verify your email with OTP",
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+
       setIsConfirmationOpen(false);
 
+      const cartResponse: any = await getCartDetails();
       try {
-        if (!user?.email) {
-          const res = await api.post(endpoints.continueasGuest, {
-            token: guestToken,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            mobile: data.mobile,
-            email: data.email,
-            countryCode: data.countryCode,
-            countryName: data.countryName,
-            deliveryAddress: data.deliveryAddress,
-            additionalAddress: data.additionalAddress,
-            address: {
-              street: data.deliveryAddress,
-              state: data.state,
-              country: data.country,
-              postalCode: data.postalCode,
-              fullAddress: data.fullAddress,
-              latitude: data.latitude,
-              longitude: data.longitude,
-            },
-            coordinates: {
-              latitude: data.latitude,
-              longitude: data.longitude,
-            },
-          });
+        const res = await api.post(endpoints.continueasGuest, {
+          // token: guestToken || "4883-5706-9900",
+          firstname: data.firstname,
+          lastname: data.lastname,
+          mobile: data.mobile,
+          email: data.email,
+          countryCode: data.countryCode,
+          countryName: data.countryName,
+          deliveryAddress: data.deliveryAddress,
+          additionalAddress: data.additionalAddress,
+          address: {
+            street: data.deliveryAddress,
+            state: data.state,
+            country: data.country,
+            postalCode: data.postalCode,
+            fullAddress: data.fullAddress,
+            latitude: data.latitude,
+            longitude: data.longitude,
+          },
+          coordinates: {
+            latitude: data.latitude,
+            longitude: data.longitude,
+          },
+        });
 
-          Cookies.set("guest_access_token", res?.data?.result?.output?.token, {
-            expires: 7,
-            secure: true,
-            sameSite: "strict",
-          });
-
-          if (setCheckoutFormData) {
-            setCheckoutFormData((prev: any) => ({
-              ...prev,
-              guestAddress: data,
-              email: data?.email,
-            }));
-          }
-
-          toast({
-            description: "Address added successfully",
-            variant: "success",
-            duration: 3000,
-          });
-          if (onPlaceOrder) {
-            onPlaceOrder(data);
-          }
-        } else {
-          const response = await api.post(endpoints.addAddress, {
-            firstname: data?.firstname,
-            lastname: data?.lastname,
-            mobile: data?.mobile,
-            type: data?.type,
-            companyName: data?.companyName,
-            aptSuiteUnit: data?.aptSuiteUnit,
-            countryCode: data?.countryCode,
-            deliveryAddress: data?.deliveryAddress,
-            countryName: data?.countryName,
-            additionalAddress: data?.additionalAddress,
-            postalCode: data?.postalCode,
-            state: data?.state,
-            country: data?.country,
-            email: data?.email,
-            coordinates: {
-              latitude: data?.latitude,
-              longitude: data?.longitude,
-            },
-            deliveryInstruction: data?.deliveryInstruction,
-            customer: data?.customer,
-            isDefaultShipping: data?.isDefaultShipping || false,
-            isDefaultBilling: data?.isDefaultBilling || false,
-          });
-
-          console.log("response.data", response.data);
-
-          if (response.data?.errorCode === 0) {
-            if (getAddress) getAddress();
-            form.reset();
+        Cookies.set("guest_access_token", res?.data?.result?.output?.token, {
+          expires: 7,
+          secure: true,
+          sameSite: "strict",
+        });
+        if (checkoutFormData?.paymentType === "card") {
+          if (!user?.email) {
+            const body = {
+              cart: cartResponse?.cart,
+              guestAddress: {
+                ...data,
+                coordinates: {
+                  latitude: data?.latitude,
+                  longitude: data?.longitude,
+                },
+              },
+              paymentMethod: "network-international",
+              guest: res?.data?.result?.output?.token || "4883-5706-9900",
+              deliverynote: cartResponse?.summary?.deliveryNote,
+            };
             toast({
               description: "Address added successfully",
               variant: "success",
               duration: 3000,
             });
-            if (onPlaceOrder) {
-              onPlaceOrder(data);
-            }
-            getCartDetails();
+
+            api
+              .post(endpoints.placeOrder, body)
+              .then((response: any) => {
+                if (response.data?.errorCode == 0) {
+                  router.push(response?.data?.result?.paymentLink);
+                  trackPurchased(cartResponse);
+                }
+              })
+              .catch((error: any) => {
+                toast({
+                  title: error?.message || "Something went wrong",
+                  variant: "destructive",
+                  duration: 3000,
+                });
+              });
           } else {
-            toast({
-              description: response.data.message || "Something went wrong",
-              variant: "destructive",
-              duration: 3000,
+            const response = await api.post(endpoints.addAddress, {
+              firstname: data?.firstname,
+              lastname: data?.lastname,
+              mobile: data?.mobile,
+              type: data?.type,
+              companyName: data?.companyName,
+              aptSuiteUnit: data?.aptSuiteUnit,
+              countryCode: data?.countryCode,
+              deliveryAddress: data?.deliveryAddress,
+              countryName: data?.countryName,
+              additionalAddress: data?.additionalAddress,
+              postalCode: data?.postalCode,
+              state: data?.state,
+              country: data?.country,
+              email: data?.email,
+              coordinates: {
+                latitude: data?.latitude,
+                longitude: data?.longitude,
+              },
+              deliveryInstruction: data?.deliveryInstruction,
+              customer: data?.customer,
+              isDefaultShipping: data?.isDefaultShipping || false,
+              isDefaultBilling: data?.isDefaultBilling || false,
             });
+
+            console.log("response.data", response.data);
+
+            if (response.data?.errorCode === 0) {
+              if (getAddress) getAddress();
+              form.reset();
+              toast({
+                description: "Address added successfully",
+                variant: "success",
+                duration: 3000,
+              });
+              console.log(
+                "----------TEST AS A LOGIN USER----------",
+                cartResponse
+              );
+
+              // if (onPlaceOrder) {
+              //   onPlaceOrder({
+              //     ...data,
+              //     // cartResponse,
+              //     guestAddress: data,
+              //     email: data?.email,
+              //   });
+              // }
+
+              api
+                .post(endpoints.placeOrder, {
+                  cart: cartResponse?.cart,
+                  address: defaultAddress?._id,
+                  paymentMethod: "network-international",
+                  deliverynote: cartResponse?.summary?.deliveryNote,
+                })
+                .then((response: any) => {
+                  if (response.data?.errorCode == 0) {
+                    router.push(response?.data?.result?.paymentLink);
+                    toast({ description: "Placing Order.." });
+                    window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
+                      1
+                    )}`;
+                    trackPurchased(cartResponse);
+                    toast({
+                      description: "Order placed Successfully",
+                      variant: "success",
+                    });
+                  }
+                })
+                .catch((error: any) => {
+                  toast({
+                    title: "Something went wrong",
+                    variant: "destructive",
+                    duration: 3000,
+                  });
+                });
+            } else {
+              toast({
+                description: response.data.message || "Something went wrong",
+                variant: "destructive",
+                duration: 3000,
+              });
+            }
+          }
+        } else {
+          if (defaultAddress?._id && !guestToken) {
+            console.log("defaultAddress", defaultAddress);
+            api
+              .post(endpoints.placeOrder, {
+                cart: cartResponse?.cart,
+                address: defaultAddress?._id,
+                paymentMethod: "COD",
+                deliverynote: cartResponse?.summary?.deliveryNote,
+                guest: guestToken || "4883-5706-9900",
+              })
+              .then((response: any) => {
+                if (response.data?.errorCode == 0) {
+                  toast({ description: "Placing Order.." });
+                  window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
+                    1
+                  )}`;
+                  toast({
+                    description: "Order placed Successfully",
+                    variant: "success",
+                  });
+                }
+              })
+              .catch((error: any) => {
+                toast({
+                  title: "Something went wrong",
+                  variant: "destructive",
+                  duration: 3000,
+                });
+              });
+          } else {
+            console.log(
+              "-------------------------------------",
+              res?.data?.result?.output?.token
+            );
+
+            api
+              .post(endpoints.placeOrder, {
+                cart: cartResponse?.cart,
+                guestAddress: {
+                  ...data,
+                  coordinates: {
+                    latitude: data?.latitude,
+                    longitude: data?.longitude,
+                  },
+                },
+                paymentMethod: "COD",
+                guest: guestToken || "4883-5706-9900",
+              })
+              .then((response: any) => {
+                if (response.data?.errorCode == 0) {
+                  toast({ description: "Placing Order.." });
+                  window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
+                    1
+                  )}`;
+                  toast({
+                    description: "Order placed Successfully",
+                    variant: "success",
+                  });
+                }
+              })
+              .catch((error: any) => {
+                toast({
+                  title: "Something went wrong",
+                  variant: "destructive",
+                  duration: 3000,
+                });
+              });
           }
         }
       } catch (error) {

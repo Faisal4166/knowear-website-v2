@@ -216,7 +216,6 @@
   height: 100%; 
 }
 
-/* Style the scrollbar track */
 .sheet-content-custom-scrollbar::-webkit-scrollbar {
   width: 7px; 
 }
@@ -235,3 +234,66 @@
   padding-left: 20px !important;
 }
 
+.description {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #2a2a2a;
+  font-family: "Georgia", serif;
+  letter-spacing: 0.2px;
+  max-width: auto;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.description h1,
+.description h2,
+.description h3,
+.description h4,
+.description h5,
+.description h6 {
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+  color: #111;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.description h1::before,
+.description h2::before,
+.description h3::before,
+.description h4::before,
+.description h5::before,
+.description h6::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  color: #b9975b;
+  font-size: 0.9em;
+}
+
+.description p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.description img {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+  margin: 2rem 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  object-fit: cover;
+}
+
+.description ul,
+.description ol {
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+}
+
+.description li {
+  margin-bottom: 0.75rem;
+}

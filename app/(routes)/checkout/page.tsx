@@ -346,19 +346,19 @@ const Checkout = (props: Props) => {
             resolve(res?.data?.result);
           } else {
             reject(res?.data?.message);
-            toast({
-              title: "Error fetching cart",
-              variant: "destructive",
-              duration: 3000,
-            });
+            // toast({
+            //   title: "Error fetching cart",
+            //   variant: "destructive",
+            //   duration: 3000,
+            // });
           }
         })
         .catch((error) => {
-          toast({
-            title: "Error fetching cart",
-            variant: "destructive",
-            duration: 3000,
-          });
+          // toast({
+          //   title: "Error fetching cart",
+          //   variant: "destructive",
+          //   duration: 3000,
+          // });
         });
     });
   };
@@ -367,7 +367,7 @@ const Checkout = (props: Props) => {
     if (addressFormRef.current?.submitForm) {
       try {
         setIsSubmitting(true);
-        await addressFormRef.current.submitForm(); // ✅ Now it's awaitable
+        await addressFormRef.current.submitForm();
       } catch (error) {
         console.error("Form submission failed", error);
       } finally {
@@ -376,165 +376,185 @@ const Checkout = (props: Props) => {
     }
   };
 
-  const onHandlePlaceOrder = () => {
-    trackSnapCheckoutStart(checkoutFormData);
-    if (
-      checkoutFormData?.paymentType === "cod" &&
-      !checkoutFormData?.isVerified
-    ) {
-      toast({
-        title: "Please verify your email with OTP",
-        variant: "destructive",
-        duration: 3000,
-      });
-      return;
-    }
+  // const onHandlePlaceOrder = async (data: any) => {
+  //   return;
+  //   if (
+  //     checkoutFormData?.paymentType === "cod" &&
+  //     !checkoutFormData?.isVerified
+  //   ) {
+  //     toast({
+  //       title: "Please verify your email with OTP",
+  //       variant: "destructive",
+  //       duration: 3000,
+  //     });
+  //     return;
+  //   }
 
-    // if (!checkoutFormData?.email) {
-    //     toast({
-    //     title: "Please enter email",
-    //     variant: "destructive",
-    //     duration: 3000,
-    //     });
-    //     return;
-    //     }
-    //     if (!checkoutFormData?.guestAddress?.type && !defaultAddress?._id) {
-    //       toast({
-    //         title: "Please select address",
-    //         variant: "destructive",
-    //         duration: 3000,
-    //       });
-    //       return;
-    //     }
-    // if (checkoutFormData?.paymentType === "card") {
-    if (guestToken) {
-      console.log("REQUEST==================");
+  //   const cartResponse: any = await getCartDetails();
 
-      api
-        .post(endpoints.placeOrder, {
-          cart: cartDetails?.cart,
-          guestAddress: {
-            ...checkoutFormData?.guestAddress,
-            coordinates: {
-              latitude: checkoutFormData?.guestAddress?.latitude,
-              longitude: checkoutFormData?.guestAddress?.longitude,
-            },
-          },
-          paymentMethod: "network-international",
-          guest: guestToken,
-          deliverynote: cartDetails?.summary?.deliveryNote,
-        })
-        .then((response: any) => {
-          if (response.data?.errorCode == 0) {
-            router.push(response?.data?.result?.paymentLink);
-          }
-        })
-        .catch((error: any) => {
-          toast({
-            title: error?.message || "Something went wrong",
-            variant: "destructive",
-            duration: 3000,
-          });
-        });
-    } else {
-      api
-        .post(endpoints.placeOrder, {
-          cart: cartDetails?.cart,
-          address: defaultAddress?._id,
-          paymentMethod: "network-international",
-          deliverynote: cartDetails?.summary?.deliveryNote,
-        })
-        .then((response: any) => {
-          if (response.data?.errorCode == 0) {
-            router.push(response?.data?.result?.paymentLink);
-            toast({ description: "Placing Order.." });
-            window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
-              1
-            )}`;
-            toast({
-              description: "Order placed Successfully",
-              variant: "success",
-            });
-          }
-        })
-        .catch((error: any) => {
-          toast({
-            title: "Something went wrong",
-            variant: "destructive",
-            duration: 3000,
-          });
-        });
-    }
-    // } else {
-    //   if (guestToken) {
-    //     api
-    //       .post(endpoints.placeOrder, {
-    //         cart: cartDetails?.cart,
-    //         guestAddress: checkoutFormData?.guestAddress,
-    //         paymentMethod: "COD",
-    //         guest: guestToken,
-    //       })
-    //       .then((response: any) => {
-    //         if (response.data?.errorCode == 0) {
-    //           toast({ description: "Placing Order.." });
-    //           window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
-    //             1
-    //           )}`;
-    //           toast({
-    //             description: "Order placed Successfully",
-    //             variant: "success",
-    //           });
-    //         }
-    //       })
-    //       .catch((error: any) => {
-    //         toast({
-    //           title: "Something went wrong",
-    //           variant: "destructive",
-    //           duration: 3000,
-    //         });
-    //       });
-    //   } else {
-    //     api
-    //       .post(endpoints.placeOrder, {
-    //         cart: cartDetails?.cart,
-    //         address: defaultAddress?._id,
-    //         paymentMethod: "COD",
-    //         deliverynote: cartDetails?.summary?.deliveryNote,
-    //       })
-    //       .then((response: any) => {
-    //         if (response.data?.errorCode == 0) {
-    //           toast({ description: "Placing Order.." });
-    //           window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
-    //             1
-    //           )}`;
-    //           toast({
-    //             description: "Order placed Successfully",
-    //             variant: "success",
-    //           });
-    //         }
-    //       })
-    //       .catch((error: any) => {
-    //         toast({
-    //           title: "Something went wrong",
-    //           variant: "destructive",
-    //           duration: 3000,
-    //         });
-    //       });
-    //   }
-    // }
-  };
+  //   if (!checkoutFormData?.email) {
+  //     toast({
+  //       title: "Please enter email",
+  //       variant: "destructive",
+  //       duration: 3000,
+  //     });
+  //     return;
+  //   }
+  //   if (!checkoutFormData?.guestAddress?.type && !defaultAddress?._id) {
+  //     toast({
+  //       title: "Please select address",
+  //       variant: "destructive",
+  //       duration: 3000,
+  //     });
+  //     return;
+  //   }
+  //   console.log(
+  //     "===============CHECK======================",
+  //     checkoutFormData?.payment_type
+  //   );
+  //   if (checkoutFormData?.paymentType === "card") {
+  //     if (guestToken) {
+  //       const body = {
+  //         cart: cartResponse?.cart || cartDetails?.cart,
+  //         guestAddress: {
+  //           ...(checkoutFormData?.guestAddress || data),
+  //           coordinates: {
+  //             latitude:
+  //               data?.latitude || checkoutFormData?.guestAddress?.latitude,
+  //             longitude:
+  //               data?.longitude || checkoutFormData?.guestAddress?.longitude,
+  //           },
+  //         },
+  //         paymentMethod: "network-international",
+  //         guest: guestToken,
+  //         deliverynote:
+  //           cartResponse?.summary?.deliveryNote ||
+  //           cartDetails?.summary?.deliveryNote,
+  //       };
+
+  //       api
+  //         .post(endpoints.placeOrder, body)
+  //         .then((response: any) => {
+  //           if (response.data?.errorCode == 0) {
+  //             router.push(response?.data?.result?.paymentLink);
+  //           }
+  //         })
+  //         .catch((error: any) => {
+  //           toast({
+  //             title: error?.message || "Something went wrong",
+  //             variant: "destructive",
+  //             duration: 3000,
+  //           });
+  //         });
+  //     } else {
+  //       api
+  //         .post(endpoints.placeOrder, {
+  //           cart: cartDetails?.cart,
+  //           address: defaultAddress?._id,
+  //           paymentMethod: "network-international",
+  //           deliverynote: cartDetails?.summary?.deliveryNote,
+  //         })
+  //         .then((response: any) => {
+  //           if (response.data?.errorCode == 0) {
+  //             router.push(response?.data?.result?.paymentLink);
+  //             toast({ description: "Placing Order.." });
+  //             window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
+  //               1
+  //             )}`;
+  //             toast({
+  //               description: "Order placed Successfully",
+  //               variant: "success",
+  //             });
+  //           }
+  //         })
+  //         .catch((error: any) => {
+  //           // toast({
+  //           //   title: "Something went wrong",
+  //           //   variant: "destructive",
+  //           //   duration: 3000,
+  //           // });
+  //         });
+  //     }
+  //   } else {
+  //     if (guestToken) {
+  //       console.log(
+  //         "==========IF=====COD======================",
+  //         checkoutFormData?.payment_type
+  //       );
+  //       api
+  //         .post(endpoints.placeOrder, {
+  //           cart: cartDetails?.cart,
+  //           guestAddress: checkoutFormData?.guestAddress,
+  //           paymentMethod: "COD",
+  //           guest: guestToken,
+  //         })
+  //         .then((response: any) => {
+  //           if (response.data?.errorCode == 0) {
+  //             toast({ description: "Placing Order.." });
+  //             window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
+  //               1
+  //             )}`;
+  //             toast({
+  //               description: "Order placed Successfully",
+  //               variant: "success",
+  //             });
+  //           }
+  //         })
+  //         .catch((error: any) => {
+  //           toast({
+  //             title: "Something went wrong",
+  //             variant: "destructive",
+  //             duration: 3000,
+  //           });
+  //         });
+  //     } else {
+  //       console.log(
+  //         "=========ELSE======COD======================",
+  //         checkoutFormData?.payment_type
+  //       );
+
+  //       api
+  //         .post(endpoints.placeOrder, {
+  //           cart: cartDetails?.cart,
+  //           address: defaultAddress?._id,
+  //           paymentMethod: "COD",
+  //           deliverynote: cartDetails?.summary?.deliveryNote,
+  //         })
+  //         .then((response: any) => {
+  //           if (response.data?.errorCode == 0) {
+  //             toast({ description: "Placing Order.." });
+  //             window.location.href = `/order-placed?orderId=${response?.data?.result?.orderNo?.slice(
+  //               1
+  //             )}`;
+  //             toast({
+  //               description: "Order placed Successfully",
+  //               variant: "success",
+  //             });
+  //           }
+  //         })
+  //         .catch((error: any) => {
+  //           toast({
+  //             title: "Something went wrong",
+  //             variant: "destructive",
+  //             duration: 3000,
+  //           });
+  //         });
+  //     }
+  //   }
+  // };
+
   const getGiftWrapAmount = () => {
     api
       .get(endpoints.getGiftWrapDetails)
       .then((response: any) => {
         if (response.data?.errorCode == 0) {
-          // console.log(response.data.result,"dsnskjfccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
           setGiftWrapAmount(response.data.result.giftCharge);
         } else {
         }
       })
       .catch((error: any) => {});
   };
+
   const handleGiftWrapChange = (enabled: boolean) => {
     // Toggle the local gift wrap state
     setHasGiftWrap((prev: any) => !prev);
@@ -645,7 +665,6 @@ const Checkout = (props: Props) => {
               email={checkoutFormData?.email}
               checkoutFormData={checkoutFormData}
               setCheckoutFormData={setCheckoutFormData}
-              onPlaceOrder={onHandlePlaceOrder}
             />
             <div className="flex flex-col ">
               <div className="w-full md:w-[48%]">
@@ -655,7 +674,6 @@ const Checkout = (props: Props) => {
                   giftWrapAmount={giftWrapAmount}
                 />
               </div>
-
               <div className="w-full md:w-[48%]">
                 <DeliveryInstructionsOption
                   onDeliveryInstructionsChange={
@@ -666,50 +684,25 @@ const Checkout = (props: Props) => {
                 />
               </div>
             </div>
-
-            {/* ) : (
-              <AddressForm/>
-            )} */}
-            {isAddress ? (
-              <>
-                <div className="h-[1px] bg-[#D8D8D8] my-[15px] md:my-[30px]"></div>
-                <div className="flex justify-end justify-between">
-                  {/* <GiftWrapOption
-                    onGiftWrapChange={handleGiftWrapChange}
-                    cartDetails={cartDetails}
-                    giftWrapAmount={giftWrapAmount}
-                  />
-                  <DeliveryInstructionsOption
-                    onDeliveryInstructionsChange={
-                      handleDeliveryInstructionsChange
-                    }
-                    cartDetails={cartDetails}
-                    existingInstructions={deliveryInstructions}
-                  /> */}
-                </div>
-                {/* <PaymentMethods
-                  cartDetails={cartDetails}
-                  checkoutFormData={checkoutFormData}
-                  setCheckoutFormData={setCheckoutFormData}
-                  guestToken={guestToken}
-                /> */}
-              </>
-            ) : (
-              <></>
-            )}
-
+            <div className="mt-10 mb-10">
+              <PaymentMethods
+                cartDetails={cartDetails}
+                checkoutFormData={checkoutFormData}
+                setCheckoutFormData={setCheckoutFormData}
+                guestToken={guestToken}
+              />
+            </div>
             <Button
-              // disabled={
-              //   !checkoutFormData?.paymentType ||
-              //   (!checkoutFormData?.guestAddress?.type &&
-              //     !defaultAddress?._id) ||
-              //   !isLoaded
-              // }
+              disabled={!checkoutFormData?.paymentType || !isLoaded}
               onClick={handlePlaceOrderClick}
-              className="bg-black gap-4  text-white h-[50px] mt-[70px] text-base hidden md:flex justify-center items-center rounded-none px-[64px] hover:bg-black uppercase  "
+              className="bg-black gap-4 text-white h-[50px] mt-[30px] text-base hidden md:flex justify-center items-center rounded-none px-[64px] hover:bg-black uppercase"
             >
               <SecureLock />
-              <span className="pt-1"> Secure Checkout</span>
+              <span className="pt-1">
+                {checkoutFormData?.paymentType === "cod"
+                  ? "Place Order"
+                  : "Secure Checkout"}
+              </span>
             </Button>
 
             <div className="fixed bottom-[57px] left-1/2 transform -translate-x-1/2 w-full mt-5 block md:hidden !z-50 shadow-[0px_-13px_23px_1px_#dddddd9e]">
@@ -739,16 +732,15 @@ const Checkout = (props: Props) => {
               </Sheet> */}
               <div className="bg-white px-5  py-3">
                 <Button
+                  disabled={!checkoutFormData?.paymentType || !isLoaded}
                   onClick={handlePlaceOrderClick}
-                  className="w-full h-[50px] bg-black gap-4 text-white md:text-white rounded-none text-[15px] font-medium uppercase flex justify-center items-center"
+                  className="w-full h-[50px] bg-black gap-4 text-white hover:bg-black md:text-white rounded-none text-[15px] font-medium uppercase flex justify-center items-center"
                 >
-                  {/* svg of  lock  */}
                   <SecureLock />
-                  <span className="hidden md:inline uppercase pt-1">
-                    Secure Checkout
-                  </span>
                   <span className="md:hidden uppercase pt-1">
-                    Secure Checkout
+                    {checkoutFormData?.paymentType === "cod"
+                      ? "Place Order"
+                      : "Secure Checkout"}
                   </span>
                 </Button>
               </div>

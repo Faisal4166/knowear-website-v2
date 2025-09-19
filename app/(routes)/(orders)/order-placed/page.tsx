@@ -27,8 +27,7 @@ const OrderPlaced = (props: Props) => {
   const getOrderDetail = () => {
     api
       .post(endpoints.orderDetails, { order: "#" + orderId })
-      .then((res) => { 
-
+      .then((res) => {
         if (res.data.errorCode == 0) {
           setOrderDetails(res.data?.result);
           getCartDetails();
@@ -50,10 +49,10 @@ const OrderPlaced = (props: Props) => {
     }
 
     getOrderDetail();
-    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-            // Optiow ultimat enal debug log
-            trackPurchase(orderDetails);  // Pass cartDetails directly (or adjust as needed)
-          }
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      // Optiow ultimat enal debug log
+      trackPurchase(orderDetails); // Pass cartDetails directly (or adjust as needed)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -83,8 +82,8 @@ const OrderPlaced = (props: Props) => {
               Order Summary
             </div> */}
             <div className="text-2xl font-bold md:text-xl md:font-semibold text-gray-900 shadow-md p-2 shadow-[0px_-13px_23px_1px_#dddddd9e]">
-  Order Summary
-</div>
+              Order Summary
+            </div>
 
             <Link
               href={`${
@@ -111,24 +110,25 @@ const OrderPlaced = (props: Props) => {
                   Shipping Address
                 </h4>
                 <p className="max-md:text-[13px] max-md:font-normal">
-                <p className="max-md:text-[13px] max-md:font-normal">
-  {/* {orderDetails?.delivery?.address?.type}, */}
-  {orderDetails?.delivery?.additionalAddress?.text 
-    ? orderDetails?.delivery?.deliveryAddress?.text + ", " 
-    : ""}
-  {orderDetails?.delivery?.address?.lane?.text}{" "}
-  {/* {orderDetails?.delivery?.address?.city?.text}{" "} */}
-  {orderDetails?.delivery?.address?.state?.text?  ", " + orderDetails?.delivery?.address?.state?.text   : ""}
-</p>
+                  <p className="max-md:text-[13px] max-md:font-normal">
+                    {/* {orderDetails?.delivery?.address?.type}, */}
+                    {orderDetails?.delivery?.additionalAddress?.text
+                      ? orderDetails?.delivery?.deliveryAddress?.text + ", "
+                      : ""}
+                    {orderDetails?.delivery?.address?.lane?.text}{" "}
+                    {/* {orderDetails?.delivery?.address?.city?.text}{" "} */}
+                    {orderDetails?.delivery?.address?.state?.text
+                      ? ", " + orderDetails?.delivery?.address?.state?.text
+                      : ""}
+                  </p>
                 </p>
                 <div className="h-px w-full bg-[#D8D8D8] mt-[15px] mb-3.5 md:mt-5 md:mb-10" />
                 <h4 className="font-semibold text-sm md:text-xl md:pb-2.5">
                   Mobile Number
                 </h4>
                 <p className="max-md:text-[13px] max-md:font-normal">
-                {orderDetails?.delivery?.customer?.mobile?.text || orderDetails?.delivery?.address?.mobile?.text}
-
-                  
+                  {orderDetails?.delivery?.customer?.mobile?.text ||
+                    orderDetails?.delivery?.address?.mobile?.text}
                 </p>
                 <div className="h-px w-full bg-[#D8D8D8] mt-[15px] mb-[15px] md:mt-5 md:mb-10" />
                 <h4 className="font-semibold text-sm md:text-xl md:pb-5">
@@ -169,7 +169,6 @@ const OrderPlaced = (props: Props) => {
                 </div>
                 <Link href={"/products"}>
                   <Button className="max-md:hidden h-[50px] mt-[51px] w-full rounded-none p-0 flex items-center justify-center bg-black hover:bg-black text-white font-medium text-lg">
-
                     Continue Shopping
                   </Button>
                 </Link>

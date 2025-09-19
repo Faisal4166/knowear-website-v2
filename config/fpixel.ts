@@ -16,6 +16,7 @@ type FacebookEventName =
   | "PageView"
   | "AddToCart"
   | "Purchase"
+  | "Purchased"
   | "InitiateCheckout"
   | "AddPaymentInfo"
   | "ViewContent"
@@ -75,11 +76,9 @@ export const trackAddToCart = (productDetails: any) => {
 };
 
 export const trackCheckout = (checkoutDetails: any) => {
-  event('InitiateCheckout', checkoutDetails);
-  console.log(
-    "--FB-----checkout--------EVENT TRIGGER--------------------"
-  );
-}
+  event("InitiateCheckout", checkoutDetails);
+  console.log("--FB-----checkout--------EVENT TRIGGER--------------------");
+};
 
 export const trackPaymentInfo = (purchaseDetails: any) => {
   event("AddPaymentInfo", purchaseDetails);
@@ -90,4 +89,8 @@ export const trackPaymentInfo = (purchaseDetails: any) => {
 export const trackPurchase = (purchaseDetails: any) => {
   event("Purchase", purchaseDetails);
   console.log("--FB------Purchase--------EVENT TRIGGER--------------------");
+};
+export const trackPurchased = (purchasedDetails: any) => {
+  event("Purchased", purchasedDetails);
+  console.log("--FB------Purchased--------EVENT TRIGGER--------------------");
 };

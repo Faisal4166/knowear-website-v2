@@ -30,8 +30,10 @@ const VideoBanner = ({ checkoutBanner = false, widgetDetails }: Props) => {
               KnoWear Supports Education Internationally
             </h3>
             <p className="text-xs lg:text-xl font-medium uppercase md:leading-[20px] lg:mt-[10px] -mt-12">
-              "We proudly supported the “Get Active for Education” initiative at
-              the American University of Sharjah (AUS)"
+              {/* "We proudly supported the “Get Active for Education” initiative at
+              the American University of Sharjah (AUS)"  */}
+              WE SUPPORTED THE “GET ACTIVE FOR EDUCATION” INITIATIVE AT THE
+              AMERICAN UNIVERSITY OF SHARJAH (AUS).
             </p>
           </>
         )}

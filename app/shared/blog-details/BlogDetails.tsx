@@ -3,6 +3,7 @@ import Calender from "@/public/svgs/Calender";
 import Clock from "@/public/svgs/Clock";
 import Image from "next/image";
 import React from "react";
+import DOMPurify from "dompurify";
 
 const BlogDetails = ({ details }: any) => {
   const months = [
@@ -45,19 +46,27 @@ const BlogDetails = ({ details }: any) => {
         <div className="flex items-center gap-[9px]">
           <div className="flex items-center gap-[9px] mt-[11px] md:mt-[9.8px]">
             <Calender />
-            <p className="text-black opacity-50 font-normal text-xs leading-[18px] min-w-[101px]">{formatDate(details?.createdAt)}</p>
+            <p className="text-black opacity-50 font-normal text-xs leading-[18px] min-w-[101px]">
+              {formatDate(details?.createdAt)}
+            </p>
           </div>
           <div className="flex items-center gap-[9px] mt-[11px] md:mt-[9.8px]">
             <Clock />
-            <p className="text-black opacity-50 font-normal text-xs leading-[18px] min-w-[101px]">10 Min Read</p>
+            <p className="text-black opacity-50 font-normal text-xs leading-[18px] min-w-[101px]">
+              10 Min Read
+            </p>
           </div>
         </div>
         <div className="mt-2.5 md:mt-[21px]">
-            <p className="leading-[19px] text-[13px] text-black">
-                {details?.overview}
-            </p>
-            <div className="mt-[11px] md:mt-2 text-[13px] text-black " dangerouslySetInnerHTML={{ __html: details?.description }}></div>
-
+          <p className="leading-[19px] text-[13px] text-black">
+            {details?.overview}
+          </p>
+          <div
+            className="description mt-[11px] md:mt-2 text-[13px] text-black"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(details?.description || ""),
+            }}
+          />
         </div>
       </div>
     </div>
